@@ -91,7 +91,7 @@ taskmanager.numberOfTaskSlots: 3
 
 # The parallelism used for programs that did not specify and other parallelism.
 
-parallelism.default: 3
+parallelism.default: 2
 
 # The default file system scheme and authority.
 #

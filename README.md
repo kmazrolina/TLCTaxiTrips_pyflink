@@ -54,8 +54,10 @@ to spin up Flink (JobManager+TaskManager), Kafka+Zookeeper, the data generator, 
 
 You can find the [docker-compose.yaml](docker-compose.yml) file of the pyflink-walkthrough in the `pyflink-walkthrough` root directory.
 
-### Taxi Trips Data
+### Prep Taxi Trips Data
 Download TLC Trips Data from [Kaggle Competition Site](https://www.kaggle.com/competitions/nyc-taxi-trip-duration/data?select=test.zip) into `generator/data/` directory. Unizip the data and run `generator/data/sort_data.py` to prepare it for streaming. 
+
+In this project only `train.csv` data is used, as test competition data doesn not contain all data fields. 
 
 ### Building the Docker image
 
@@ -66,7 +68,7 @@ $ cd pyflink-walkthrough
 $ docker-compose build
 ```
 
-### Starting the Playground
+### Starting the Pipeline
 
 Once the Docker image build is complete, run the following command to start the playground:
 

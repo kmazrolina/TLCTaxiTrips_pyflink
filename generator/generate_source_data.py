@@ -4,9 +4,8 @@ from kafka import errors
 from json import dumps
 from time import sleep
 import csv
-import os
 
-DATA_PATH = './data/data_sorted.csv'
+DATA_PATH = 'data_sorted.csv'
 
 def write_data(producer, frequency=2):
     
@@ -34,7 +33,7 @@ def write_data(producer, frequency=2):
                         "trip_duration" : row['trip_duration']}
             print(cur_data)
             producer.send(topic, value=cur_data)
-            sleep(2)
+            sleep(frequency)
 
 def create_producer():
     print("Connecting to Kafka brokers")
@@ -52,4 +51,4 @@ def create_producer():
 
 if __name__ == '__main__':
     producer = create_producer()
-    write_data(producer)
+    write_data(producer, frequency=0.2)
