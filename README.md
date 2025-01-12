@@ -36,18 +36,6 @@ continuously write new records to the `trip_msg` Kafka topic.
 ### PyFlink
 
 The transaction data will be processed with PyFlink using the Python script [trip_msg_processing.py](trip_msg_proccessing.py).
-This script will first map the `provinceId` in the input records to its corresponding province name using a Python UDF, 
-and then compute the sum of the transaction amounts for each province. The following code snippet will explain the main processing logic in [trip_msg_processing.py](trip_msg_proccessing.py).
-
-```python
-
-t_env.from_path("trip_msg") \ # Get the created Kafka source table named trip_msg
-        .select("province_id_to_name(provinceId) as province, payAmount") \ # Select the provinceId and payAmount field and transform the provinceId to province name by a UDF
-        .group_by("province") \ # Group the selected fields by province
-        .select("province, sum(payAmount) as pay_amount") \ # Sum up payAmount for each province 
-        .execute_insert("es_sink") # Write the result into ElaticSearch Sink
-
-```
 
 
 ### Elasticsearch
@@ -114,27 +102,18 @@ $ docker-compose exec jobmanager ./bin/flink run -py /opt/pyflink-walkthrough/tr
 ```
 
 Navigate to the [Flink Web UI](http://localhost:8081) after the job is submitted successfully. There should be a job in the running job list.
-Click the job to get more details. You should see that the `StreamGraph` of the `trip_msg_proccessing` consists of two nodes, each with a parallelism of 1. 
-There is also a table in the bottom of the page that shows some metrics for each node (e.g. bytes received/sent, records received/sent). Note that Flink's metrics only
-report bytes and records and records communicated within the Flink cluster, and so will always report 0 bytes and 0 records received by sources, and 0 bytes and 0 records
-sent to sinks - so don't be confused that noting is reported as being read from Kafka, or written to Elasticsearch.
-
-![image](pic/submitted.png)
-
-![image](pic/detail.png)    
+Click the job to get more details. You should see that the `StreamGraph` of the `trip_msg_proccessing`.
 
 2. Navigate to the [Kibana UI](http://localhost:5601), open the menu list by clicking the menu button in the upper left corner, then choose the Dashboard item to turn to the dashboard page and choose the pre-created dashboard `trip_dashboard`.
-There will be a vertical bar chart and a pie chart demonstrating the total amount and the proportion of each province.
 
-![image](pic/dash_board.png)
 
-![image](pic/chart.png)
+
+
 
 3. Stop the PyFlink job:
 
 Visit the Flink Web UI at [http://localhost:8081/#/overview](http://localhost:8081/#/overview) , select the job, and click `Cancel Job` in the upper right corner.
 
-![image](pic/cancel.png)
 
 ### Stopping the Pipeline
 
